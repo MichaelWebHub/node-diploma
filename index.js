@@ -23,8 +23,8 @@ app.use(function(req, res, next) {
 
 app.get('/test', function(req, res) {
     const user = new User({
-        name: req.body.name,
-        email: req.body.email,
+        name: "Michael",
+        email: "miswow@yandex.ru",
         credits: 100
     });
 
