@@ -21,6 +21,10 @@ app.use(function(req, res, next) {
 
 // Creating new user or Logging in
 
+app.get('/test', function(req, res) {
+    res.end('test');
+});
+
 app.post('/login', jsonParser, function(req, res) {
     console.log(req.body.name, req.body.email);
 
