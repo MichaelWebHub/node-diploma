@@ -27,12 +27,12 @@ function clientInterfaceCtrl($http) {
                         credits: data.user[0].credits
                     };
 
+                    showAdminPanel();
+
                     document.querySelector('.user-info').id = data.user[0]._id;
                     document.querySelector('.name-output').textContent = data.user[0].name;
                     document.querySelector('.email-output').textContent = data.user[0].email;
                     document.querySelector('.credits-output').textContent = data.user[0].credits;
-
-                    showAdminPanel();
                 }
             })
             .catch(err => console.log(err));
