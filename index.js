@@ -21,7 +21,7 @@ app.use(function(req, res, next) {
 
 // Creating new user or Logging in
 
-app.get('/#!/test', function(req, res) {
+app.get('/test', function(req, res) {
     res.end('test');
 });
 
