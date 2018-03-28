@@ -74,5 +74,5 @@ function clientInterfaceCtrl($http) {
 
 app.component('clientInterface', {
     controller: clientInterfaceCtrl,
-    templateUrl: './app/components/clientInterface/clientInterfaceView.html'
+    templateUrl: './components/clientInterface/clientInterfaceView.html'
 });
