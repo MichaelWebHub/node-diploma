@@ -10,7 +10,7 @@ function clientInterfaceCtrl($http) {
             email: that.loginUser.email
         };
 
-        fetch('http://localhost:3000/login', {
+        fetch('https://serene-thicket-37274.herokuapp.com/#!/login', {
             method: 'POST',
             headers: {
                 "Content-type": "application/json; charset=UTF-8"
@@ -60,7 +60,7 @@ function clientInterfaceCtrl($http) {
     };
 
     this.addCredits = function() {
-        $http.get('http://localhost:3000/getcredits/' + that.user.id)
+        $http.get('https://serene-thicket-37274.herokuapp.com/#!/getcredits/' + that.user.id)
             .then(function(response) {
                 document.querySelector('.credits-output').textContent = response.data.credits;
             })

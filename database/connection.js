@@ -1,12 +1,10 @@
 const mongoose = require('mongoose');
-
-let uri = "mongodb://michaeladze:1256330_Mongo@ds125195.mlab.com:25195/heroku_xbfdqzgp";
-let lhuri = "mongodb://localhost/dronecafe";
+const db_config = require('../config/database');
 
 function db() {
     return new Promise(function(resolve, reject) {
 
-        mongoose.connect(uri);
+        mongoose.connect(db_config.uri);
 
         mongoose.connection.once('open', function() {
             resolve("Connection has been made.");
