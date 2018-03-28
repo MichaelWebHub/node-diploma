@@ -10,34 +10,32 @@ function clientInterfaceCtrl($http) {
             email: that.loginUser.email
         };
 
-        fetch('https://serene-thicket-37274.herokuapp.com/#!/test');
+        fetch('https://serene-thicket-37274.herokuapp.com/#!/login', {
+            method: 'POST',
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify(body)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status) {
+                    that.user = {
+                        id: data.user[0]._id,
+                        name: data.user[0].name,
+                        email: data.user[0].email,
+                        credits: data.user[0].credits
+                    };
 
-        // fetch('https://serene-thicket-37274.herokuapp.com/#!/login', {
-        //     method: 'POST',
-        //     headers: {
-        //         "Content-type": "application/json; charset=UTF-8"
-        //     },
-        //     body: JSON.stringify(body)
-        // })
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         if (data.status) {
-        //             that.user = {
-        //                 id: data.user[0]._id,
-        //                 name: data.user[0].name,
-        //                 email: data.user[0].email,
-        //                 credits: data.user[0].credits
-        //             };
-        //
-        //             document.querySelector('.user-info').id = data.user[0]._id;
-        //             document.querySelector('.name-output').textContent = data.user[0].name;
-        //             document.querySelector('.email-output').textContent = data.user[0].email;
-        //             document.querySelector('.credits-output').textContent = data.user[0].credits;
-        //
-        //             showAdminPanel();
-        //         }
-        //     })
-        //     .catch(err => console.log(err));
+                    document.querySelector('.user-info').id = data.user[0]._id;
+                    document.querySelector('.name-output').textContent = data.user[0].name;
+                    document.querySelector('.email-output').textContent = data.user[0].email;
+                    document.querySelector('.credits-output').textContent = data.user[0].credits;
+
+                    showAdminPanel();
+                }
+            })
+            .catch(err => console.log(err));
 
         function showAdminPanel() {
             const whitePlane = document.querySelector('.registration-inner');

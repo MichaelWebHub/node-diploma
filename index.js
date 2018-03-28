@@ -21,11 +21,7 @@ app.use(function(req, res, next) {
 
 // Creating new user or Logging in
 
-app.get('/test', function(req, res) {
-    res.end('test');
-});
-
-app.post('/login', jsonParser, function(req, res) {
+app.post('/#!/login', jsonParser, function(req, res) {
     console.log(req.body.name, req.body.email);
 
     db()
@@ -55,7 +51,7 @@ app.post('/login', jsonParser, function(req, res) {
         });
 });
 
-app.get('/getcredits/:id', function(req, res) {
+app.get('/#!/getcredits/:id', function(req, res) {
 
     const id = req.params.id;
 
