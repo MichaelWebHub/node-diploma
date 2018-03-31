@@ -1,22 +1,24 @@
 'use strict';
 
-// Declare app level module which depends on views, and components
-const app = angular.module('app', ['ngRoute']);
+const app = angular.module('app', ['Router', 'AuthUser', 'Online']);
 
 angular.module('app')
+    .run(function ($state, $document, $transitions, AuthService, uiService) {
 
-    .config(['$routeProvider',
-        function config($routeProvider) {
+        console.log(AuthService.isLoggedIn());
 
-            $routeProvider.when('/', {
-                template: '<client-interface></client-interface>'
-            })
-        }
-    ]);
+        $transitions.onStart({to: '*'}, function (transition) {
+            if (!AuthService.isLoggedIn()) {
+                console.log("Denied! Transition to Auth");
+                $state.go('auth');
+            } else {
+                console.log("Moving to " + transition.targetState()._identifier);
+            }
+        });
 
-// angular.module('app')
-//     .config(['$httpProvider', function($httpProvider) {
-//         $httpProvider.defaults.headers.common = {
-//             "application-id": "Test",
-//             "secret-key": "Testest0111" }
-//     }]);
+        $transitions.onStart({to: 'client'}, function () {
+            console.log('Success');
+            setTimeout(uiService.showAdminPanel, 100);
+        });
+    });
+

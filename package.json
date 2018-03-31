@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/MichaelWebHub/node-diploma#readme",
   "dependencies": {
+    "angular-socket-io": "^0.7.0",
     "body-parser": "^1.18.2",
     "express": "^4.16.3",
     "mongodb": "^3.0.5",

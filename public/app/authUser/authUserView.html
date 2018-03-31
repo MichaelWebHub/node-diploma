@@ -1,0 +1,23 @@
+<div class="registration">
+    <div class="registration-inner">
+        <form class="registration-form" name="loginForm" action="#" method="post" novalidate>
+            <div class="form-row">
+                <input type="text" class="form-input form-input-name" name="name" autocomplete="off" placeholder="Name" ng-model="$ctrl.loginUser.name" ng-required="true">
+                <span class="validation-status"></span>
+                <div class="underline">
+                    <div class="underline-inner"></div>
+                </div>
+            </div>
+            <div class="form-row">
+                <input type="text" class="form-input form-input-email" name="email" autocomplete="off" placeholder="Email" ng-model="$ctrl.loginUser.email" ng-required="true" ng-pattern="/[\w\d\-]{2,25}@\w{2,10}\.\w{2,7}/">
+                <span class="validation-status"></span>
+                <div class="underline">
+                    <div class="underline-inner"></div>
+                </div>
+            </div>
+            <div class="form-row clearfix">
+                <input type="submit" class="form-submit login" value="Log in" ng-disabled="loginForm.$invalid" ng-click="$ctrl.switchToInterface($event)">
+            </div>
+        </form>
+    </div>
+</div>

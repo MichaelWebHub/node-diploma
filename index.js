@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const io = require('socket.io');
+const socket = require('socket.io');
 const {ObjectId} = require("mongodb");
 const db = require('./database/connection');
 const User = require('./database/users');
@@ -9,71 +9,56 @@ const app = express();
 const port = process.env.PORT || 3000;
 const jsonParser = bodyParser.json();
 
-app.listen(port);
+const server = app.listen(port);
+const io = socket(server);
+
+// Middleware
 
 app.use(express.static('public'));
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
 
-// Creating new user or Logging in
+// Socket
 
-app.get('/test', function(req, res) {
-    const user = new User({
-        name: "Michael",
-        email: "miswow@yandex.ru",
-        credits: 100
-    });
+io.on('connection', function(socket) {
 
-    user.save();
-});
+    console.log("Server: Connection has been made");
 
-app.post('/login', jsonParser, function(req, res) {
-    console.log(req.body.name, req.body.email);
-
-    db()
-        .then(function() {
-            const user = new User({
-                name: req.body.name,
-                email: req.body.email,
-                credits: 100
-            });
-
-            User.find({email: req.body.email})
-                .then(function(result) {
-                    if (result.length === 0) {
-                        user.save().then(function () {
-                            console.log("A new user has been added to the database.");
-                            res.json({user: result, status: true, message: 'You have been registered'});
-                        }).catch(function (err) {
-                            console.log(err.message);
-                        });
-                    } else {
-                        res.json({user: result, status: true, message: 'You are now logging in'});
-                    }
+    socket.on('logIn', function(data) {
+        db()
+            .then(function () {
+                const user = new User({
+                    name: data.name,
+                    email: data.email,
+                    credits: 100
                 });
-        })
-        .catch(function (error) {
-            console.log(error.message);
-        });
-});
 
-app.get('/getcredits/:id', function(req, res) {
+                if (data.name === undefined || data.email === undefined) {
+                    socket.emit('retrieveUserData', {status: false, message: 'Incorrect name or email'});
+                } else {
+                    User.find({name: data.name, email: data.email})
+                        .then(function (result) {
+                            if (result.length === 0) {
+                                user.save().then(function () {
+                                    console.log("A new user has been added to the database.");
+                                    socket.emit('retrieveUserData', {user: result, status: true, message: 'You have been registered'})
+                                }).catch(function (err) {
+                                    console.log(err.message);
+                                });
+                            } else {
+                                socket.emit('retrieveUserData', {user: result[0], status: true, message: 'You are now logging in'});
+                            }
+                        });
+                }
 
-    const id = req.params.id;
 
-    db()
-        .then(function() {
-
-            User.findOneAndUpdate({_id: ObjectId(id)}, {$inc: {credits: 100}}, {new: true})
-                .then(result => res.json(result))
-                .catch(err => console.log(err.message))
-        });
-});
-
-app.get('/menu', function(req, res) {
-
+            })
+            .catch(function (error) {
+                console.log(error.message);
+            });
+    })
 });
