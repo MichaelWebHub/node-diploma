@@ -9,10 +9,9 @@
             <div class="user-info clearfix">
                 <p class="user-name"> <span class="name-output"> {{$ctrl.currentUser.name}} </span> </p>
                 <p class="user-email"> <strong class="mr-1">Email: </strong> <span class="email-output"> {{$ctrl.currentUser.email}} </span> </p>
-                <p class="user-credits"> <strong class="mr-1"> Credits: </strong> <span class="credits-output"> {{$ctrl.currentUser.credits}} </span> </p>
+                <p class="user-credits"> <strong class="mr-1"> Credits: </strong> <span class="credits-output"> {{$ctrl.currentUser.credits}} </span> <i class="fas fa-rocket"></i></p>
                 <div class="add-credits" ng-click="$ctrl.addCredits($event)"> Add Credits</div>
             </div>
-
         </div>
     </div>
 </div>
@@ -21,7 +20,7 @@
     <div class="orders-panel-inner">
         <div class="orders-top">
             <h2 class="order-heading"> My orders</h2>
-            <div class="add-new-order" ng-click="$ctrl.toggleMenu()"> Add </div>
+            <div class="add-new-order" ng-click="$ctrl.toggleMenu($event)"> Show Menu </div>
         </div>
         <div class="orders-main"></div>
     </div>
@@ -29,7 +28,27 @@
 
 <div class="menu">
     <div class="menu-inner">
-        <h2 class="menu-heading"> Menu </h2>
+        <h2 class="menu-heading">
+            <span class="preloader" ng-show="$ctrl.preloader">
+                <span class="circle"></span>
+            </span>
+            Menu
+        </h2>
+
+        <div class="menu-list">
+            <article class="dish" ng-repeat="dish in $ctrl.menu" id="{{dish.id}}">
+
+                <div class="dish-info">
+                    <h3 class="dish-title"> {{dish.title}} </h3>
+                    <p class="dish-ingredients"> <span class="dish-ingredient" ng-repeat="ingredient in dish.ingredients"> {{ingredient}}</span></p>
+                </div>
+                <div class="dish-options">
+                    <div class="dish-price"> {{dish.price}} <i class="fas fa-rocket"></i></div>
+                    <div class="dish-buy"> Buy </div>
+                </div>
+
+            </article>
+        </div>
 
     </div>
 </div>

@@ -17,7 +17,15 @@
             </div>
             <div class="form-row clearfix">
                 <input type="submit" class="form-submit login" value="Log in" ng-disabled="loginForm.$invalid" ng-click="$ctrl.switchToInterface($event)">
+                <div class="preloader" ng-show="$ctrl.preloader">
+                    <div class="circle"></div>
+                </div>
             </div>
+
+            <div class="form-row" ng-hide="$ctrl.emailOk">
+                <p class="alert-message"> User with this email already exists </p>
+            </div>
+
         </form>
     </div>
 </div>

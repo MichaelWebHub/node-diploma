@@ -3,7 +3,10 @@ const bodyParser = require('body-parser');
 const socket = require('socket.io');
 const {ObjectId} = require("mongodb");
 const db = require('./database/connection');
+const mongoose = require('mongoose');
 const User = require('./database/users');
+const Menu = require('./database/menu');
+
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -24,11 +27,12 @@ app.use(function (req, res, next) {
 
 // Socket
 
-io.on('connection', function(socket) {
+io.on('connection', function (socket) {
 
     console.log("Server: Connection has been made");
 
-    socket.on('logIn', function(data) {
+    // Login
+    socket.on('logIn', function (data) {
         db()
             .then(function () {
                 const user = new User({
@@ -40,25 +44,68 @@ io.on('connection', function(socket) {
                 if (data.name === undefined || data.email === undefined) {
                     socket.emit('retrieveUserData', {status: false, message: 'Incorrect name or email'});
                 } else {
-                    User.find({name: data.name, email: data.email})
+                    User.find({email: data.email})
                         .then(function (result) {
-                            if (result.length === 0) {
-                                user.save().then(function () {
-                                    console.log("A new user has been added to the database.");
-                                    socket.emit('retrieveUserData', {user: result, status: true, message: 'You have been registered'})
-                                }).catch(function (err) {
-                                    console.log(err.message);
+
+                            if (result[0].name !== data.name) {
+                                socket.emit('retrieveUserData', {
+                                    user: {},
+                                    status: false,
+                                    message: 'User with this email already exists'
                                 });
                             } else {
-                                socket.emit('retrieveUserData', {user: result[0], status: true, message: 'You are now logging in'});
+                                socket.emit('retrieveUserData', {
+                                    user: result[0],
+                                    status: true,
+                                    message: 'You are now logging in'
+                                });
                             }
-                        });
+                        })
+                        .catch(function () {
+                            user.save().then(function (findUser) {
+                                console.log("A new user has been added to the database.");
+                                socket.emit('retrieveUserData', {
+                                    user: findUser,
+                                    status: true,
+                                    message: 'You have been registered'
+                                })
+                            }).catch(function (err) {
+                                console.log(err.message);
+                            });
+                        })
                 }
 
 
             })
             .catch(function (error) {
-                console.log(error.message);
+                socket.emit('retrieveUserData', {
+                    user: {},
+                    status: false,
+                    message: 'Could not connect to the database'
+                });
             });
-    })
+    });
+
+    // Get credits
+    socket.on('getCredits', function (user) {
+        db()
+            .then(function () {
+                User.findOneAndUpdate({_id: ObjectId(user._id)}, {$inc: {credits: 100}}, {new: true})
+                    .then(function (result) {
+                        socket.emit('retrieveCredits', result.credits);
+                    })
+                    .catch(err => console.log(err));
+            })
+    });
+
+    // Get menu
+
+    socket.on('getMenu', function () {
+        db()
+            .then(function () {
+                Menu.find({}).then(function(menu) {
+                    socket.emit('getMenu', menu);
+                });
+            })
+    });
 });

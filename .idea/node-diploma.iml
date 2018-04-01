@@ -12,5 +12,6 @@
     <orderEntry type="library" name="angular" level="application" />
     <orderEntry type="library" name="angular-ui-router" level="application" />
     <orderEntry type="library" name="socket" level="application" />
+    <orderEntry type="library" name="angular-animate" level="application" />
   </component>
 </module>

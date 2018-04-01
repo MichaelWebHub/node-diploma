@@ -54,7 +54,7 @@ a {
 
 .registration-form {
     width: 340px;
-    height: 240px;
+    height: 250px;
     background: #ffffff;
     box-shadow: 10px 10px 50px #4E7DB5;
     border-radius: 6px;
@@ -151,6 +151,37 @@ a {
     cursor: default;
 }
 
+.alert-message {
+    margin-top: 15px;
+    text-align: center;
+    color: #F4511E;
+    cursor: default;
+    transition: 0.15s;
+}
+
+.preloader {
+    float: right;
+    display: block;
+    width: 34px;
+    height: 34px;
+    margin-right: 20px;
+}
+
+.circle {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px solid #ECEFF1;
+    border-top-color: #4587D3;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    form {transform: rotate(0); }
+    to {transform: rotate(360deg); }
+}
+
 /* Client Interface */
 
 .wrapper {
@@ -186,7 +217,6 @@ a {
 .orders-panel.enter {
     transform: translateX(0);
 }
-
 
 .admin-panel-inner {
     padding: 20px;
@@ -264,7 +294,7 @@ a {
 }
 
 .add-new-order {
-    width: 80px;
+    width: 110px;
     height: 35px;
     display: flex;
     justify-content: center;
@@ -285,6 +315,7 @@ a {
 
 .menu {
     position: absolute;
+    overflow: auto;
     top: 0;
     right: -800px;
     width: 30%;
@@ -299,6 +330,18 @@ a {
     right: 0;
 }
 
+.menu::-webkit-scrollbar {
+    width: 10px;
+}
+
+.menu::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.menu::-webkit-scrollbar-thumb {
+    background: #616161;
+}
+
 .menu-inner {
     margin: 0 20px;
 }
@@ -311,3 +354,96 @@ a {
     cursor: default;
 }
 
+.menu-list {
+    overflow: auto;
+}
+
+.dish {
+    display: flex;
+    margin-top: 15px;
+    padding: 10px 0 25px;
+    border-bottom: 1px solid #fff;
+    transition: 0.2s;
+}
+
+.dish.ng-enter {
+     transition: 0.5s linear all;
+     opacity:0;
+     transform: translateY(-100px);
+ }
+
+.dish.ng-enter.ng-enter-active {
+    opacity:1;
+    transform: translateY(0px);
+}
+
+.dish:last-child {
+    border-bottom: none;
+}
+
+.dish-info {
+    width: 70%;
+    cursor: default;
+}
+
+.dish-ingredients {
+    margin-top: 10px;
+}
+
+.dish-ingredient {
+    font-size: 13px;
+    text-transform: uppercase;
+    font-weight: 400;
+}
+
+.dish-ingredient:after {
+    content: ',';
+}
+
+.dish-ingredient:last-child:after {
+    content: '';
+}
+
+.dish-options {
+    width: 30%;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: default;
+}
+
+.dish-price {
+    height: 50%;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+}
+
+.fa-rocket {
+    margin-left: 5px;
+}
+
+.dish-buy {
+    width: 60%;
+    height: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid #fff;
+    border-radius: 4px;
+    transition: 0.3s;
+}
+
+.dish-buy:hover {
+    background: #fff;
+    color: #26A69A;
+}
+
+span.circle {
+    border: 2px solid transparent;
+    border-top-color: #fff;
+}

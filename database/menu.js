@@ -3,14 +3,18 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const MenuSchema = new Schema({
-    title: String,
-    image: String,
-    id: Number,
-    rating: Number,
-    ingredients: Array,
-    price: Number
+    obg: [
+        {
+            title: String,
+            image: String,
+            id: Number,
+            rating: Number,
+            ingredients: Array,
+            price: Number
+        }
+    ]
 });
 
-const Menu = mongoose.model('menu', MenuSchema);
+const Menu = mongoose.model('menu', MenuSchema, 'menu');
 
 module.exports = Menu;
