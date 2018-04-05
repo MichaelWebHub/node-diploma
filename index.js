@@ -117,7 +117,7 @@ io.on('connection', function (socket) {
         db()
             .then(function () {
                 Menu.find({}).then(function (menu) {
-                    socket.emit('getMenu', menu[0].mydata);
+                    socket.emit('getMenu', menu);
                 });
             })
     });
