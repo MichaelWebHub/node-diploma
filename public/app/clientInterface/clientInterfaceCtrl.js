@@ -1,11 +1,15 @@
-function clientInterfaceCtrl($state, $transitions, AuthService, mySocket) {
+function clientInterfaceCtrl(AuthService, mySocket) {
 
     this.currentUser = AuthService.isLoggedIn().user;
+    this.preloaderCredits = false;
+    this.orders = [];
 
     this.addCredits = () => {
-        mySocket.emit('getCredits', this.currentUser);
+        this.preloaderCredits = true;
+        mySocket.emit('addCredits', this.currentUser);
         mySocket.on('retrieveCredits', (result) => {
             this.currentUser.credits = result;
+            this.preloaderCredits = false;
         })
     };
 
@@ -34,6 +38,61 @@ function clientInterfaceCtrl($state, $transitions, AuthService, mySocket) {
             event.currentTarget.classList.add('menu-loaded');
         }
     };
+
+    this.addMoreCredits = (e, credits) => {
+        this.preloaderCredits = true;
+
+        mySocket.emit('addMoreCredits', {
+            user: this.currentUser,
+            credits: credits
+        });
+
+        mySocket.on('retrieveCredits', (result) => {
+            this.currentUser.credits = result;
+            this.preloaderCredits = false;
+        })
+    };
+
+    const getOrders = () => {
+        mySocket.emit('getOrders');
+        mySocket.on('retrieveOrders', (orders) => {
+            orders.forEach(order => this.orders.push(order));
+        });
+    };
+
+    getOrders();
+
+    this.buyDish = (dish) => {
+        this.preloaderCredits = true;
+
+        mySocket.emit('buyDish', {
+            user: this.currentUser,
+            dish: dish
+        });
+
+        mySocket.on('retrieveCredits', (result) => {
+            this.currentUser.credits = result;
+            this.preloaderCredits = false;
+        });
+    };
+
+    mySocket.on('retrieveNewOrder', (order) => {
+        this.orders.push(order);
+    });
+
+    mySocket.on('retrieveOrder', (data) => {
+        this.orders.forEach((order, index) => {
+            if (order._id === data._id) {
+                this.orders[index] = data;
+            }
+        })
+    });
+
+    this.logOut = () => {
+        AuthService.logOut();
+    };
+
+
 }
 
 app.component('clientInterface', {

@@ -196,25 +196,38 @@ a {
 .admin-panel {
     height: 100vh;
     width: 30%;
+    min-width: 220px;
     float: left;
     background: linear-gradient(to bottom, #4587D3, #78AAE5);
-    transition: 1s ease-out;
-    transform: translateX(-1000px);
+    transition: all 1s ease-out;
 }
 
 .orders-panel {
     height: 100vh;
     width: 70%;
     float: left;
-    transition: 1s ease-out;
+    transition: all 1s ease-out;
+}
+
+.main-content.ng-enter {
+    transition: all 1.2s;
+}
+
+.main-content.ng-enter .admin-panel {
+    transition: all 1s ease-out;
+    transform: translateX(-1000px);
+}
+
+.main-content.ng-enter .orders-panel{
+    transition: all 1s ease-out;
     transform: translateX(2000px);
 }
 
-.admin-panel.enter {
+.main-content.ng-enter-active .admin-panel {
     transform: translateX(0);
 }
 
-.orders-panel.enter {
+.main-content.ng-enter-active .orders-panel {
     transform: translateX(0);
 }
 
@@ -262,21 +275,32 @@ a {
     margin-right: 0.5em;
 }
 
-.add-credits {
-    float: right;
+.admin-button {
+    float: left;
     display: inline-block;
     padding: 8px 10px;
     margin-top: 30px;
+    margin-left: 15px;
     border: 1px solid #fff;
     border-radius: 4px;
     cursor: pointer;
     transition: 0.3s;
 }
 
-.add-credits:hover {
+.add-credits {
+    margin-left: 0;
+}
+
+.admin-button:hover {
     background: #fff;
     color: #4587D3;
     box-shadow: 1px 1px 1px #1976D2;
+}
+
+.add-credits-preloader {
+    margin-top: 30px;
+    margin-left: 30px;
+    float: left;
 }
 
 .orders-top {
@@ -397,7 +421,7 @@ a {
 }
 
 .dish-ingredient:after {
-    content: ',';
+    content: ' - ';
 }
 
 .dish-ingredient:last-child:after {
@@ -425,9 +449,20 @@ a {
     margin-left: 5px;
 }
 
-.dish-buy {
-    width: 60%;
+.dish-buttons{
     height: 50%;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dish-buy,
+.dish-add-more {
+    position: absolute;
+    width: 60%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -438,12 +473,192 @@ a {
     transition: 0.3s;
 }
 
+.dish-buy.ng-enter {
+    opacity: 0;
+    transition: 0.2s;
+}
+
+.dish-buy.ng-enter-active {
+    opacity: 1;
+}
+
+.dish-buy.ng-leave {
+    opacity: 1;
+    transition: 0.2s;
+}
+
+.dish-buy.ng-leave-active {
+    opacity: 0;
+}
+
+.dish-add-more.ng-enter {
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.dish-add-more.ng-enter-active {
+    opacity: 1;
+}
+
+.dish-add-more.ng-leave {
+    opacity: 1;
+    transition: 0.3s;
+}
+
+.dish-add-more.ng-leave-active {
+    opacity: 0;
+}
+
 .dish-buy:hover {
     background: #fff;
     color: #26A69A;
 }
+.dish-add-more:hover {
+    background: #fff;
+    color: #26A69A;
+}
+
 
 span.circle {
     border: 2px solid transparent;
     border-top-color: #fff;
 }
+
+/* Order */
+
+.orders-main {
+    padding: 20px;
+}
+
+.order {
+    display: flex;
+    align-items: center;
+    cursor: default;
+    margin-top: 20px;
+}
+
+.order-number {
+    width: 40px;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.order-info {
+    margin-left: 25px;
+    display: flex;
+    align-items: center;
+}
+
+.order-title {
+    width: 500px;
+}
+
+.order-status-color {
+    display: inline-block;
+    margin-left: 10px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    transition: 0.2s;
+}
+
+.order-status {
+    width: 150px;
+    margin-left: 25px;
+    background: #CFD8DC;
+    border-radius: 4px;
+    padding: 10px;
+    text-align: center;
+}
+
+.order-status:first-letter {
+    text-transform: uppercase;
+}
+
+.order-status-color.ordered {
+    background: #7986CB;
+}
+
+.order-status-color.preparing {
+    background: #4DD0E1;
+}
+
+.order-status-color.delivery {
+    background: #FF9800;
+}
+
+.order-status-color.failed {
+    background: #FF5722;
+}
+
+.order-status-color.delivered {
+    background: #66BB6A;
+}
+
+/*****************/
+/***  KITCHEN  ***/
+/*****************/
+
+.kitchen {
+    height: 100vh;
+}
+
+.kitchen-cooking,
+.kitchen-orders {
+    float: left;
+    width: 50%;
+    height: 100%;
+}
+
+.kitchen-heading {
+    text-align: center;
+    padding: 20px 0;
+    color: #fff;
+    border-bottom: 1px solid #fff;
+    background: #7986CB;
+    min-height: 80px;
+    height: 10%;
+}
+
+.kitchen-cooking-heading {
+    border-left: 1px solid #fff;
+}
+
+.kitchen-main {
+    height: 90%;
+}
+
+.kitchen-cooking-main {
+    border-left: 1px solid #BDBDBD;
+}
+
+.kitchen-orders-list {
+    margin: 0 auto;
+}
+
+.kitchen-orders-list .order-status {
+    background: #c5d0d5;
+}
+
+.change-status-button {
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.change-status-button:hover {
+    background: #26A69A;
+    color: #fff;
+}
+
+.kitchen-orders-list .order {
+    padding: 15px 15px;
+    margin-top: 0;
+    transition: 0.12s;
+}
+
+.kitchen-orders-list .order:hover {
+    background: #d8dfe3;
+}
+
+
+

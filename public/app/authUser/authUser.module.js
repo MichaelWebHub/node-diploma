@@ -4,6 +4,20 @@ angular.module('AuthUser')
 
     .factory('AuthService', function ($state, mySocket, uiService) {
 
+        // In case you don't want to login after each refresh
+
+        // let user = {
+        //     message: "You are now logging in",
+        //     status: true,
+        //     user: {
+        //         credits: 200,
+        //         email: "miswow@yandex.ru",
+        //         name: "michael",
+        //         __v: 0,
+        //         _id: "5ac38891c2703140f89a0fb1",
+        //     }
+        // };
+
         let user = {
             status: false
         };
@@ -15,13 +29,12 @@ angular.module('AuthUser')
 
                 mySocket.on('retrieveUserData', function (data) {
                     user = data;
-                    callback();
+                    callback(user);
 
                     if (data.status) {
                         // Animated interface switch and state change
                         uiService.hideRegistration()
                             .then(function () {
-                                console.log("hideRegistration() resolved");
                                 $state.go('client');
                             })
                     }
@@ -31,11 +44,15 @@ angular.module('AuthUser')
 
             },
 
-            isLoggedIn:
+            isLoggedIn: function () {
+                return user;
+            },
 
-                function () {
-                    return user;
-                }
+            logOut: function () {
+                user = {
+                    status: false
+                };
+            }
         };
 
     });

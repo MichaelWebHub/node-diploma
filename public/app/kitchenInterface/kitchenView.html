@@ -1,0 +1,47 @@
+<div class="kitchen clearfix">
+
+    <div class="kitchen-orders">
+        <h1 class="kitchen-heading kitchen-orders-heading"> Pending </h1>
+        <div class="kitchen-main kitchen-orders-main">
+
+            <div class="kitchen-orders-list">
+                <div class="order" ng-repeat="order in $ctrl.orders track by order._id">
+                    <div class="order-number">#{{order.orderNumber}}</div>
+                    <div class="order-info">
+                        <h3 class="order-title"> {{order.dish.title}} </h3>
+                        <p class="order-status">
+                            {{order.status}}  <span class="order-status-color {{order.status}}"></span>
+                        </p>
+                        <p class="order-status change-status-button" ng-click="$ctrl.startCooking(order)">
+                            Start Cooking
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="kitchen-cooking">
+        <h1 class="kitchen-heading kitchen-cooking-heading"> Cooking </h1>
+        <div class="kitchen-main kitchen-cooking-main">
+
+            <div class="kitchen-orders-list">
+                <div class="order" ng-repeat="order in $ctrl.cookingOrders track by order._id">
+                    <div class="order-number">#{{order.orderNumber}}</div>
+                    <div class="order-info">
+                        <h3 class="order-title"> {{order.dish.title}} </h3>
+                        <p class="order-status">
+                            {{order.status}}  <span class="order-status-color {{order.status}}"></span>
+                        </p>
+                        <p class="order-status change-status-button" ng-click="$ctrl.ready(order)">
+                            Ready
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>

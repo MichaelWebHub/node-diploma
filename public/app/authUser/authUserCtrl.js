@@ -3,7 +3,7 @@ function authUserCtrl(AuthService) {
     const that = this;
 
     this.preloader = false;
-    this.emailOk = true;
+    this.status = true;
 
     that.switchToInterface = (e) => {
         e.preventDefault();
@@ -11,14 +11,16 @@ function authUserCtrl(AuthService) {
         this.preloader = true;
 
         const body = {
-            name: this.loginUser.name,
-            email: this.loginUser.email
+            name: this.loginUser.name.toLowerCase(),
+            email: this.loginUser.email.toLowerCase()
         };
 
         //https://serene-thicket-37274.herokuapp.com/login
-        AuthService.authenticate(body, () => {
-            this.emailOk = AuthService.status;
-            this.preloader = AuthService.status;
+        AuthService.authenticate(body, (user) => {
+            console.log(user);
+            this.status = user.status;
+            this.message = user.message;
+            this.preloader = user.status;
         });
     };
 }

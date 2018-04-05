@@ -3,9 +3,7 @@
 const app = angular.module('app', ['Router', 'ngAnimate', 'AuthUser', 'Online']);
 
 angular.module('app')
-    .run(function ($state, $transitions, AuthService, uiService) {
-
-        console.log(AuthService.isLoggedIn());
+    .run(function ($state, $transitions, AuthService) {
 
         $transitions.onStart({to: 'client'}, function (transition) {
             if (!AuthService.isLoggedIn().status) {
@@ -16,12 +14,5 @@ angular.module('app')
             }
         });
 
-        $transitions.onSuccess({to: 'client'}, function () {
-
-            setTimeout(function() {
-                uiService.showAdminPanel();
-            }, 200)
-
-        });
     });
 

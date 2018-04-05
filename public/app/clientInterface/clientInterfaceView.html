@@ -1,5 +1,4 @@
 <div class="admin-panel">
-
     <div class="admin-panel-inner">
         <div class="user-card">
 
@@ -10,7 +9,13 @@
                 <p class="user-name"> <span class="name-output"> {{$ctrl.currentUser.name}} </span> </p>
                 <p class="user-email"> <strong class="mr-1">Email: </strong> <span class="email-output"> {{$ctrl.currentUser.email}} </span> </p>
                 <p class="user-credits"> <strong class="mr-1"> Credits: </strong> <span class="credits-output"> {{$ctrl.currentUser.credits}} </span> <i class="fas fa-rocket"></i></p>
-                <div class="add-credits" ng-click="$ctrl.addCredits($event)"> Add Credits</div>
+
+                <div class="admin-button add-credits" ng-click="$ctrl.addCredits($event)"> Add Credits</div>
+                <div class="admin-button" ng-click="$ctrl.logOut()" ui-sref="auth"> Log Out</div>
+
+                <span class="add-credits-preloader preloader" ng-show="$ctrl.preloaderCredits">
+                    <span class="add-credits-circle circle"></span>
+                </span>
             </div>
         </div>
     </div>
@@ -22,7 +27,18 @@
             <h2 class="order-heading"> My orders</h2>
             <div class="add-new-order" ng-click="$ctrl.toggleMenu($event)"> Show Menu </div>
         </div>
-        <div class="orders-main"></div>
+        <div class="orders-main">
+            <div class="order" ng-repeat="order in $ctrl.orders track by $index">
+                <div class="order-number"> #{{order.orderNumber}}</div>
+                <div class="order-info">
+                    <h3 class="order-title"> {{order.dish.title}} </h3>
+                    <p class="order-status">
+                        {{order.status}}  <span class="order-status-color {{order.status}}"></span>
+                    </p>
+                </div>
+            </div>
+
+        </div>
     </div>
 </div>
 
@@ -40,11 +56,15 @@
 
                 <div class="dish-info">
                     <h3 class="dish-title"> {{dish.title}} </h3>
-                    <p class="dish-ingredients"> <span class="dish-ingredient" ng-repeat="ingredient in dish.ingredients"> {{ingredient}}</span></p>
+                    <p class="dish-ingredients"> <span class="dish-ingredient" ng-repeat="ingredient in dish.ingredients">{{ingredient}}</span></p>
                 </div>
                 <div class="dish-options">
                     <div class="dish-price"> {{dish.price}} <i class="fas fa-rocket"></i></div>
-                    <div class="dish-buy"> Buy </div>
+
+                    <div class="dish-buttons">
+                        <div class="dish-buy" ng-if="$ctrl.currentUser.credits >= dish.price" ng-click="$ctrl.buyDish(dish)"> Buy </div>
+                        <div class="dish-add-more" ng-if="$ctrl.currentUser.credits < dish.price" ng-click="$ctrl.addMoreCredits($event, dish.price - $ctrl.currentUser.credits)"> Add {{dish.price - $ctrl.currentUser.credits}} <i class="fas fa-rocket"></i> </div>
+                    </div>
                 </div>
 
             </article>

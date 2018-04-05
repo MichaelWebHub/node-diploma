@@ -22,8 +22,8 @@
                 </div>
             </div>
 
-            <div class="form-row" ng-hide="$ctrl.emailOk">
-                <p class="alert-message"> User with this email already exists </p>
+            <div class="form-row" ng-hide="$ctrl.status">
+                <p class="alert-message"> {{$ctrl.message}} </p>
             </div>
 
         </form>

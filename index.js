@@ -1,11 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const socket = require('socket.io');
+
 const {ObjectId} = require("mongodb");
 const db = require('./database/connection');
-const mongoose = require('mongoose');
+
 const User = require('./database/users');
 const Menu = require('./database/menu');
+const Order = require('./database/orders');
+
+const drone = require('netology-fake-drone-api');
 
 
 const app = express();
@@ -62,10 +66,10 @@ io.on('connection', function (socket) {
                             }
                         })
                         .catch(function () {
-                            user.save().then(function (findUser) {
+                            user.save().then(function (newUser) {
                                 console.log("A new user has been added to the database.");
                                 socket.emit('retrieveUserData', {
-                                    user: findUser,
+                                    user: newUser,
                                     status: true,
                                     message: 'You have been registered'
                                 })
@@ -74,8 +78,6 @@ io.on('connection', function (socket) {
                             });
                         })
                 }
-
-
             })
             .catch(function (error) {
                 socket.emit('retrieveUserData', {
@@ -86,8 +88,8 @@ io.on('connection', function (socket) {
             });
     });
 
-    // Get credits
-    socket.on('getCredits', function (user) {
+    // Add credits
+    socket.on('addCredits', function (user) {
         db()
             .then(function () {
                 User.findOneAndUpdate({_id: ObjectId(user._id)}, {$inc: {credits: 100}}, {new: true})
@@ -98,14 +100,105 @@ io.on('connection', function (socket) {
             })
     });
 
-    // Get menu
+    // Add more credits
+    socket.on('addMoreCredits', function (data) {
+        db()
+            .then(function () {
+                User.findOneAndUpdate({_id: ObjectId(data.user._id)}, {$inc: {credits: data.credits}}, {new: true})
+                    .then(function (result) {
+                        socket.emit('retrieveCredits', result.credits);
+                    })
+                    .catch(err => console.log(err));
+            })
+    });
 
+    // Get menu
     socket.on('getMenu', function () {
         db()
             .then(function () {
-                Menu.find({}).then(function(menu) {
+                Menu.find({}).then(function (menu) {
                     socket.emit('getMenu', menu);
                 });
+            })
+    });
+
+    // Get orders
+
+    socket.on('getOrders', function(user) {
+        db()
+            .then(function () {
+                Order.find({})
+                    .then(function (result) {
+                        socket.emit('retrieveOrders', result);
+                    })
+                    .catch(err => console.log(err));
+            });
+    });
+
+        // Buy a dish
+        socket.on('buyDish', function (data) {
+            db()
+                .then(function () {
+                    User.findOneAndUpdate({_id: ObjectId(data.user._id)}, {$inc: {credits: -data.dish.price}}, {new: true})
+                        .then(function (result) {
+                            socket.emit('retrieveCredits', result.credits);
+                        })
+                        .catch(err => console.log(err));
+
+                    Order.count({}).then(count => {
+
+                        const order = new Order({
+                            dish: data.dish,
+                            orderNumber: count + 1,
+                            status: "ordered",
+                            statusId: 1,
+                            userId: data.user._id
+                        });
+
+                        order.save().then(function (result) {
+                            io.emit('retrieveNewOrder', result);
+                        })
+                            .catch(err => console.log(err.message));
+                    });
+                })
+        });
+
+        // Start cooking
+
+        socket.on('startCooking', function(order) {
+
+            db()
+                .then(function() {
+
+                    Order.findOneAndUpdate({_id: ObjectId(order._id)}, {$set: {status: 'preparing', statusId: 2}}, {new: true}).then(result => {
+                        io.emit('retrieveOrder', result);
+                    })
+
+                })
+        });
+
+    // Start delivery
+
+    socket.on('startDelivery', function(order) {
+        db()
+            .then(function() {
+
+                Order.findOneAndUpdate({_id: ObjectId(order._id)}, {$set: {status: 'delivery', statusId: 3}}, {new: true}).then(result => {
+                    io.emit('retrieveOrder', result);
+                });
+
+                drone
+                    .deliver()
+                    .then(() => {
+                        Order.findOneAndUpdate({_id: ObjectId(order._id)}, {$set: {status: 'delivered', statusId: 5}}, {new: true}).then(result => {
+                            io.emit('retrieveOrder', result);
+                        });
+                    })
+                    .catch(() => {
+                        Order.findOneAndUpdate({_id: ObjectId(order._id)}, {$set: {status: 'failed', statusId: 4}}, {new: true}).then(result => {
+                            io.emit('retrieveOrder', result);
+                        });
+                    });
             })
     });
 });

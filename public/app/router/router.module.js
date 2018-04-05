@@ -16,5 +16,10 @@ angular.module('Router')
                     url: '/auth',
                     template: '<auth-user></auth-user>'
                 })
+                .state({
+                    name: 'kitchen',
+                    url: '/kitchen',
+                    template: '<kitchen-interface></kitchen-interface>'
+                });
         }
     ]);
