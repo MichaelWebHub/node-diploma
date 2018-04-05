@@ -31,6 +31,7 @@ function clientInterfaceCtrl(AuthService, mySocket) {
             this.preloader = true;
             mySocket.emit('getMenu');
             mySocket.on('getMenu', (menu) => {
+                console.log(menu);
                 this.menu = menu;
                 this.preloader = false;
             });
