@@ -55,14 +55,14 @@ function clientInterfaceCtrl(AuthService, mySocket) {
         })
     };
 
-    const getOrders = () => {
-        mySocket.emit('getOrders');
-        mySocket.on('retrieveOrders', (orders) => {
-            orders.forEach(order => this.orders.push(order));
-        });
-    };
-
-    getOrders();
+    // const getOrders = () => {
+    //     mySocket.emit('getOrders');
+    //     mySocket.on('retrieveOrders', (orders) => {
+    //         orders.forEach(order => this.orders.push(order));
+    //     });
+    // };
+    //
+    // getOrders();
 
     this.buyDish = (dish) => {
         this.preloaderCredits = true;
