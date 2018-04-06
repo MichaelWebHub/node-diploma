@@ -193,10 +193,22 @@ io.on('connection', function (socket) {
                         Order.findOneAndUpdate({_id: ObjectId(order._id)}, {$set: {status: 'delivered', statusId: 5}}, {new: true}).then(result => {
                             io.emit('retrieveOrder', result);
                         });
+
+                        setTimeout(function() {
+                            Order.remove({_id: ObjectId(order._id)}).then(() => {
+                                io.emit('removeOrder', order._id);
+                            });
+                        }, 10000);
                     })
                     .catch(() => {
                         Order.findOneAndUpdate({_id: ObjectId(order._id)}, {$set: {status: 'failed', statusId: 4}}, {new: true}).then(result => {
                             io.emit('retrieveOrder', result);
+
+                            setTimeout(function() {
+                                Order.remove({_id: ObjectId(order._id)}).then(() => {
+                                    io.emit('removeOrder', order._id);
+                                });
+                            }, 10000);
                         });
                     });
             })

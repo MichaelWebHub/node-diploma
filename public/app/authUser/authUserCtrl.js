@@ -17,7 +17,6 @@ function authUserCtrl(AuthService) {
 
         //https://serene-thicket-37274.herokuapp.com/login
         AuthService.authenticate(body, (user) => {
-            console.log(user);
             this.status = user.status;
             this.message = user.message;
             this.preloader = user.status;

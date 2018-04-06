@@ -31,8 +31,7 @@ function clientInterfaceCtrl(AuthService, mySocket) {
             this.preloader = true;
             mySocket.emit('getMenu');
             mySocket.on('getMenu', (menu) => {
-                console.log(menu[0].mydata);
-                console.log(menu[0]);
+                //this.menu = menu[0];
                 this.menu = menu[0].mydata;
                 this.preloader = false;
             });
@@ -55,14 +54,14 @@ function clientInterfaceCtrl(AuthService, mySocket) {
         })
     };
 
-    // const getOrders = () => {
-    //     mySocket.emit('getOrders');
-    //     mySocket.on('retrieveOrders', (orders) => {
-    //         orders.forEach(order => this.orders.push(order));
-    //     });
-    // };
-    //
-    // getOrders();
+    const getOrders = () => {
+        mySocket.emit('getOrders');
+        mySocket.on('retrieveOrders', (orders) => {
+            orders.forEach(order => this.orders.push(order));
+        });
+    };
+
+    getOrders();
 
     this.buyDish = (dish) => {
         this.preloaderCredits = true;
@@ -89,6 +88,15 @@ function clientInterfaceCtrl(AuthService, mySocket) {
             }
         })
     });
+
+    mySocket.on('removeOrder', (id) => {
+        this.orders.forEach((order, index) => {
+            if (order._id === id) {
+                this.orders.splice(index, 1);
+            }
+        })
+    });
+
 
     this.logOut = () => {
         AuthService.logOut();
