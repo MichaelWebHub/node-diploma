@@ -5,7 +5,7 @@ angular.module('Online')
         const local = "http://localhost:3000";
         const global = "https://serene-thicket-37274.herokuapp.com/";
 
-        const myIoSocket = io.connect(local);
+        const myIoSocket = io.connect(global);
 
         mySocket = socketFactory({
             ioSocket: myIoSocket
